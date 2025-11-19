@@ -1,4 +1,4 @@
-# run-pkg-tests v4
+# run-pkg-tests
 
 This GitHub action runs the test-suite of a GAP package.
 
