@@ -128,7 +128,8 @@ runs:
               fi;
             od;
             if warning then
-              Error("Warnings were found when loading the package");
+              Exec("echo \"::error::Warnings were found when loading the package\"");
+              FORCE_QUIT_GAP(1);
             fi;
             pos := PositionSublist(output, "warning", pos + 1);
           od;
@@ -140,7 +141,8 @@ runs:
           QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
         else
           Read(GAP_TESTFILE);
-          Error("Package TestFile did not exit gap");
+          Exec("echo \"::error::Package TestFile did not exit GAP\"");
+          FORCE_QUIT_GAP(1);
         fi;
         EOF
         $GAP __TEST_RUNNNER__.g
