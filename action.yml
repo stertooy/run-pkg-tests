@@ -88,8 +88,11 @@ runs:
         GAP_TESTFILE:="${{ inputs.testfile }}";
         Read("PackageInfo.g");
         info := GAPInfo.PackageInfoCurrent;
-        if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then
+        if IsEmpty(GAP_TESTFILE) then
           GAP_TESTFILE := info.TestFile;
+        elif not IsExistingFile(GAP_TESTFILE) then
+          Exec("echo \"::error::Provided testfile '${{ inputs.testfile }}' does not exist\"");
+          FORCE_QUIT_GAP(1);
         fi;
 
         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
