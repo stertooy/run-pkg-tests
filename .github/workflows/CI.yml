@@ -81,6 +81,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        gap-version:
+          - v4.10
+          - devel
+          - v4.16dev
+          - stable-4.9
+          - 4.9
+          - v4.9.1
+          - v4.9.2
         coverage: ['true']
         testfile: ['']
         warn: ['true']
@@ -127,6 +135,8 @@ jobs:
         with:
           path: this-action/
       - uses: gap-actions/setup-gap@v3
+        with:
+          gap-version: ${{ matrix.gap-version }}
       - uses: gap-actions/build-pkg@v2
       - uses: ./this-action/
         with:
