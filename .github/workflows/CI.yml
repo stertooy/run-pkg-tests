@@ -14,6 +14,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        gap-version:
+          - v4.10
+          - devel
+          - v4.16dev
+          - stable-4.9
+          - 4.9
+          - v4.9.1
+          - v4.9.2
         coverage: ['true']
         testfile: ['']
         warn: ['true']
@@ -22,35 +30,41 @@ jobs:
         include:
           # test coverage
           - coverage: 'false'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'default'
           # test testfile
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: 'tst/testall.g'
             warn: 'true'
             pre-gap: ''
             mode: 'default'
           # test warn
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'false'
             pre-gap: ''
             mode: 'default'
           # test pre-gap
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: 'time'
             mode: 'default'
           # test mode
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'onlyneeded'
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: ''
@@ -67,6 +81,8 @@ jobs:
         with:
           path: this-action/
       - uses: gap-actions/setup-gap@v3
+        with:
+          gap-version: ${{ matrix.gap-version }}
       - uses: gap-actions/build-pkg@v2
       - uses: ./this-action/
         with:
@@ -97,24 +113,28 @@ jobs:
         include:
           # test coverage
           - coverage: 'nonsense'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'default'
           # test warn
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'nonsense'
             pre-gap: ''
             mode: 'default'
           # test pre-gap
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: 'nonsense'
             mode: 'default'
           # test mode
           - coverage: 'true'
+            gap-version: 4.9.1
             testfile: ''
             warn: 'true'
             pre-gap: ''
