@@ -76,27 +76,39 @@ runs:
           GAP="$GAP -A"
         fi
 
+
+        PKGDIR="${PWD}"
+        COVDIR="${PWD}/coverage"
+        
         # Unless explicitly turned off by setting the `coverage` input to `false`
         # we collect coverage data
         if ${{ inputs.coverage }}; then
           mkdir -p coverage
-          GAP="$GAP --cover coverage/$(mktemp XXXXXX).coverage"
+          GAP="${GAP} --cover ${COVDIR}/$(mktemp XXXXXX).coverage"
         fi
 
-        cat > __TEST_RUNNNER__.g <<EOF
+        cd $HOME
+        cat > __TEST_RUNNER__.g <<EOF
 
-        GAP_TESTFILE:="${{ inputs.testfile }}";
-        Read("PackageInfo.g");
+        Read("$PKGDIR/PackageInfo.g");
         info := GAPInfo.PackageInfoCurrent;
-        if IsEmpty(GAP_TESTFILE) then
-          GAP_TESTFILE := info.TestFile;
-        elif not IsExistingFile(GAP_TESTFILE) then
-          Exec("echo \"::error::Provided testfile '${{ inputs.testfile }}' does not exist\"");
+
+        GAP_TESTFILE_BASE:="${{ inputs.testfile }}";
+        if IsEmpty(GAP_TESTFILE_BASE) then
+          GAP_TESTFILE_BASE := info.TestFile;
+        fi;
+        GAP_TESTFILE:=Concatenation("${PKGDIR}/", GAP_TESTFILE_BASE);
+        if not IsExistingFile(GAP_TESTFILE) then
+          Exec(Concatenation(
+            "echo \"::error::Provided testfile '",
+            GAP_TESTFILE_BASE,
+            "' does not exist\""
+          ));
           FORCE_QUIT_GAP(1);
         fi;
 
         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
-        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
+        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename ${PKGDIR})");
 
         # Capture the output of loading
         output := "";
@@ -148,4 +160,6 @@ runs:
           FORCE_QUIT_GAP(1);
         fi;
         EOF
-        $GAP __TEST_RUNNNER__.g
+
+        ${GAP} __TEST_RUNNER__.g
+        rm __TEST_RUNNER__.g
