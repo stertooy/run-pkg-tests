@@ -79,10 +79,11 @@ runs:
 
         PKGDIR="${PWD}"
         PKGNAME="$(basename ${PWD})"
-        COVDIR="${PKGDIR}/coverage"
-        # TODO: put COVDIR in GITHUB_ENV
         
         cd $HOME
+        
+        COVDIR="${PWD}/coverage"
+        # TODO: put COVDIR in GITHUB_ENV
         
         # Unless explicitly turned off by setting the `coverage` input to `false`
         # we collect coverage data
