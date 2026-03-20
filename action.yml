@@ -89,7 +89,7 @@ runs:
         fi
 
         cd $HOME
-        cat > __TEST_RUNNNER__.g <<EOF
+        cat > __TEST_RUNNER__.g <<EOF
 
         Read("$PKGDIR/PackageInfo.g");
         info := GAPInfo.PackageInfoCurrent;
@@ -162,5 +162,5 @@ runs:
         fi;
         EOF
 
-        $GAP __TEST_RUNNNER__.g
+        $GAP __TEST_RUNNER__.g
         rm __TEST_RUNNER__.g
