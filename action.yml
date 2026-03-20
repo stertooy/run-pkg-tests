@@ -95,7 +95,7 @@ runs:
         cat > __TEST_RUNNNER__.g <<EOF
 
         GAP_TESTFILE:="${PKGDIR}/${{ inputs.testfile }}";
-        Read("$PWD/PackageInfo.g");
+        Read("$PKGDIR/PackageInfo.g");
         info := GAPInfo.PackageInfoCurrent;
         if IsEmpty(GAP_TESTFILE) then
           GAP_TESTFILE := Concatenation("$PKGDIR/", info.TestFile);
