@@ -76,28 +76,35 @@ runs:
           GAP="$GAP -A"
         fi
 
+
+        PKGDIR="${PWD}"
+        PKGNAME="$(basename ${PWD})"
+        COVDIR="${PKGDIR}/coverage"
+        # TODO: put COVDIR in GITHUB_ENV
+        
+        cd $HOME
+        
         # Unless explicitly turned off by setting the `coverage` input to `false`
         # we collect coverage data
         if ${{ inputs.coverage }}; then
           mkdir -p coverage
-          GAP="$GAP --cover coverage/$(mktemp XXXXXX).coverage"
+          GAP="${GAP} --cover ${COVDIR}/$(mktemp XXXXXX).coverage"
         fi
 
-        cd $HOME
         cat > __TEST_RUNNNER__.g <<EOF
 
-        GAP_TESTFILE:="${{ inputs.testfile }}";
-        Read("PackageInfo.g");
+        GAP_TESTFILE:="${PKGDIR}/${{ inputs.testfile }}";
+        Read("$PWD/PackageInfo.g");
         info := GAPInfo.PackageInfoCurrent;
         if IsEmpty(GAP_TESTFILE) then
-          GAP_TESTFILE := info.TestFile;
+          GAP_TESTFILE := Concatenation("$PKGDIR/", info.TestFile);
         elif not IsExistingFile(GAP_TESTFILE) then
           Exec("echo \"::error::Provided testfile '${{ inputs.testfile }}' does not exist\"");
           FORCE_QUIT_GAP(1);
         fi;
 
         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
-        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
+        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PKGDIR)");
 
         # Capture the output of loading
         output := "";
