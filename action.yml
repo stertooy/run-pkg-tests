@@ -78,7 +78,6 @@ runs:
 
 
         PKGDIR="${PWD}"
-        PKGNAME="$(basename ${PWD})"
         COVDIR="${PWD}/coverage"
         
         # Unless explicitly turned off by setting the `coverage` input to `false`
@@ -98,7 +97,7 @@ runs:
         if IsEmpty(GAP_TESTFILE_BASE) then
           GAP_TESTFILE_BASE := info.TestFile;
         fi;
-        GAP_TESTFILE := Concatenation("$PKGDIR/", GAP_TESTFILE_BASE);
+        GAP_TESTFILE:=Concatenation("${PKGDIR}/", GAP_TESTFILE_BASE);
         if not IsExistingFile(GAP_TESTFILE) then
           Exec(Concatenation(
             "echo \"::error::Provided testfile '",
@@ -109,7 +108,7 @@ runs:
         fi;
 
         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
-        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PKGDIR)");
+        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename ${PKGDIR})");
 
         # Capture the output of loading
         output := "";
@@ -162,5 +161,5 @@ runs:
         fi;
         EOF
 
-        $GAP __TEST_RUNNER__.g
+        ${GAP} __TEST_RUNNER__.g
         rm __TEST_RUNNER__.g
