@@ -67,8 +67,6 @@ jobs:
         with:
           path: this-action/
       - uses: gap-actions/setup-gap@v3
-        with:
-          GAP_PKGS_TO_BUILD: ''
       - uses: gap-actions/build-pkg@v3
       - uses: ./this-action/
         with:
